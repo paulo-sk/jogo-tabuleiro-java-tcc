@@ -1,18 +1,23 @@
 package test;
 
+import exceptions.PersonagemNaoEncontradoNoMapaException;
+import exceptions.SauronDominaOMundoException;
+import interfaces.SociedadeDoAnel;
 import interfaces.classes.Arqueiro;
 import interfaces.classes.Guerreiro;
 import interfaces.classes.Mago;
 import personagens.personagem_base.Personagem;
 
-public class Simulador {
+import java.util.ArrayList;
+
+public class Simulador{
 
     private Mapa mapa;
     public Simulador(Mapa mapa){
         this.mapa = mapa;
     }
 
-    public void simular(){
+    public void simular() throws PersonagemNaoEncontradoNoMapaException {
         boolean gameOver = false;
         Personagem p;
         while(!gameOver){
@@ -21,6 +26,7 @@ public class Simulador {
                 if(p != null && p.getConstituicao() <= 0){
                     mapa.getPersonagens()[i] = null;
                 }
+
                 //vitoria sociedade do anel
                 if(mapa.buscarCasa(9) != null && mapa.buscarCasa(9).fazParteDaSociedade()){
                     System.out.println("Vitoria da sociedade do anel");
@@ -50,37 +56,100 @@ public class Simulador {
     }
 
 
-    public void simular2(){
+    public void simular2() throws PersonagemNaoEncontradoNoMapaException, SauronDominaOMundoException {
         boolean gameOver = false;
-        Personagem p;
+
         while(!gameOver){
+            Personagem personagem = null;
+            Personagem pRepetido = null;
 
-            for(Personagem personagem: mapa.getPersonagens()){
-                if(personagem.getConstituicao() <= 0)
-                    mapa.getPersonagens()[mapa.buscarPosicao(personagem)] = null;
+             for(int i =0; i < mapa.getPersonagens().length; i++){
+                 if(mapa.getPersonagens()[i] != null)
+                      personagem = mapa.getPersonagens()[i];
 
-                personagem.atacar();
-                personagem.avancar();
-                System.out.println(personagem+": "+ (personagem.getConstituicao()));
-                System.out.println(mapa.exibir());
+                 //se personagem tiver sem  vida, sai do mapa;
+                 if(personagem != null && personagem.getConstituicao() <= 0){
+                     mapa.getPersonagens()[i] = null;
+                     continue;
+                 }
 
-            }
+                 //vitoria sociedade do anel
+                 if(mapa.buscarCasa(9) != null && mapa.buscarCasa(9).fazParteDaSociedade()){
+                     System.out.println("Vitoria da sociedade do anel");
+                     return;
+                 }
+                try{
+                    int sum= 0;
+                    for(int j = 0; j < mapa.getPersonagens().length; j++){
+                        if(mapa.getPersonagens()[j] == null || !mapa.getPersonagens()[j].fazParteDaSociedade())
+                            sum++;
+                        if(sum == 10)
+                          throw new SauronDominaOMundoException();
+
+                    }
+                }catch (SauronDominaOMundoException e){
+                    e.printStackTrace();
+                    return;
+                }
+
+                 if(personagem != null && personagem.equals(pRepetido)){
+                     continue;
+                 }
+
+                 if(personagem != null){
+                     personagem.atacar();
+                     personagem.avancar();
+                 }
+                 pRepetido = personagem;
+             }
+        }
+    }
+
+    public void simular3() throws PersonagemNaoEncontradoNoMapaException {
+        ArrayList<Personagem> personagens = new ArrayList<Personagem>();
+
+        for(Personagem p: mapa.getPersonagens()){
+            if(p != null)
+                personagens.add(p);
+        }
+        boolean gameOn = true;
+
+        while (gameOn){
+            System.out.println(mapa.exibir());
+
             //vitoria sociedade do anel
             if(mapa.buscarCasa(9) != null && mapa.buscarCasa(9).fazParteDaSociedade()){
                 System.out.println("Vitoria da sociedade do anel");
-                gameOver = true;
+                gameOn = false;
+                return;
             }
-            //vitoria saruman
+
+            for (Personagem p: mapa.getPersonagens()){
+                if(p != null && p.getConstituicao() <= 0){
+                    mapa.getPersonagens()[mapa.buscarPosicao(p)] = null;
+                    personagens.remove(p);
+                }
+            }
+
+
             int sum= 0;
             for(int j = 0; j < mapa.getPersonagens().length; j++){
+                //caso não tenha personagens que pertencem a sociedade no mapa
                 if(mapa.getPersonagens()[j] == null || !mapa.getPersonagens()[j].fazParteDaSociedade())
                     sum++;
                 if(sum == 10){
                     System.out.println("sauron venceu");
-                    gameOver = true;
+                    gameOn = false;
+                    return;
                 }
             }
 
+            for(Personagem ptemp: personagens){
+                ptemp.atacar();
+                ptemp.avancar();
+                System.out.println(ptemp+": "+ptemp.getConstituicao());
+            }
         }
+
     }
 }

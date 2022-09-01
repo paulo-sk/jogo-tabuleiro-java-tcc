@@ -1,5 +1,6 @@
 package personagens;
 
+import exceptions.PersonagemNaoEncontradoNoMapaException;
 import interfaces.SociedadeDoAnel;
 import interfaces.classes.Guerreiro;
 import interfaces.racas.Humano;
@@ -41,7 +42,7 @@ public class Aragorn extends Personagem implements Guerreiro, Humano, SociedadeD
 
 
     @Override
-    public void atacar() {
+    public void atacar() throws PersonagemNaoEncontradoNoMapaException {
         Personagem p1 = this.getMapa().buscarCasa(this.getMapa().buscarPosicao(this) + 1);
         if(p1 != null && !p1.fazParteDaSociedade()){
             p1.setConstituicao(p1.getConstituicao() - (this.forca*2));
@@ -50,11 +51,11 @@ public class Aragorn extends Personagem implements Guerreiro, Humano, SociedadeD
     }
 
     @Override
-    public void avancar() {
+    public void avancar() throws PersonagemNaoEncontradoNoMapaException {
         int posicaoInicial = this.getMapa().buscarPosicao(this);
-        Personagem p1 = this.getMapa().buscarCasa(this.getMapa().buscarPosicao(this) + 1);
+        Personagem p1 = this.getMapa().getPersonagens()[posicaoInicial + 1];
         if(p1 == null){
-            this.getMapa().getPersonagens()[getMapa().buscarPosicao(this)] = null;
+            this.getMapa().getPersonagens()[posicaoInicial] = null;
             this.getMapa().getPersonagens()[posicaoInicial + 1] = this;
         }
     }

@@ -1,5 +1,6 @@
 package personagens.personagem_base;
 
+import exceptions.PersonagemNaoEncontradoNoMapaException;
 import test.Mapa;
 
 public abstract class Personagem {
@@ -56,6 +57,6 @@ public abstract class Personagem {
     public Personagem(Mapa mapa){
         this.mapa = mapa;
     }
-    public abstract void atacar();
-    public abstract void avancar();
+    public abstract void atacar() throws PersonagemNaoEncontradoNoMapaException;
+    public abstract void avancar() throws PersonagemNaoEncontradoNoMapaException;
 }

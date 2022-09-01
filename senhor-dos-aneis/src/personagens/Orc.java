@@ -1,5 +1,6 @@
 package personagens;
 
+import exceptions.PersonagemNaoEncontradoNoMapaException;
 import interfaces.SociedadeDoAnel;
 import interfaces.classes.Guerreiro;
 import interfaces.racas.Monstro;
@@ -35,7 +36,7 @@ public class Orc extends Personagem implements Guerreiro, Monstro, SociedadeDoAn
     }
 
     @Override
-    public void atacar() {
+    public void atacar() throws PersonagemNaoEncontradoNoMapaException {
         int posicaoInicial = this.getMapa().buscarPosicao(this);
         Personagem p1 = this.getMapa().getPersonagens()[posicaoInicial - 1];
         if(p1 != null && p1.fazParteDaSociedade()){
@@ -45,7 +46,7 @@ public class Orc extends Personagem implements Guerreiro, Monstro, SociedadeDoAn
     }
 
     @Override
-    public void avancar() {
+    public void avancar() throws PersonagemNaoEncontradoNoMapaException {
         int posicaoInicial = this.getMapa().buscarPosicao(this);
         Personagem p1 = this.getMapa().buscarCasa(this.getMapa().buscarPosicao(this) - 1);
         if(p1 == null){

@@ -1,31 +1,34 @@
 package personagens;
 
+import exceptions.PersonagemNaoEncontradoNoMapaException;
 import interfaces.SociedadeDoAnel;
 import interfaces.classes.Guerreiro;
-import interfaces.racas.Humano;
+import interfaces.racas.Anao;
 import personagens.personagem_base.Personagem;
 import test.Mapa;
 
-public class Bromir extends Personagem implements Guerreiro, Humano, SociedadeDoAnel {
+public class Gimli extends Personagem implements Guerreiro, Anao, SociedadeDoAnel {
+
     {
-        this.forca = 7;
-        this.agilidade = 6;
-        this.inteligencia = 3;
-        this.constituicao = 40;
+        this.forca = 9;
+        this.agilidade = 2;
+        this.inteligencia = 4;
+        this.constituicao = 60;
     }
 
-    public Bromir(Mapa mapa) {
+
+    public Gimli(Mapa mapa) {
         super(mapa);
     }
 
 
     @Override
     public String toString() {
-        return "B";
+        return "I";
     }
 
     @Override
-    public void Envelhecer() {
+    public void beber() {
 
     }
 
@@ -40,7 +43,7 @@ public class Bromir extends Personagem implements Guerreiro, Humano, SociedadeDo
     }
 
     @Override
-    public void atacar() {
+    public void atacar() throws PersonagemNaoEncontradoNoMapaException {
         Personagem p1 = this.getMapa().buscarCasa(this.getMapa().buscarPosicao(this) + 1);
         if(p1 != null && !p1.fazParteDaSociedade()){
             p1.setConstituicao(p1.getConstituicao() - (this.forca*2));
@@ -49,7 +52,7 @@ public class Bromir extends Personagem implements Guerreiro, Humano, SociedadeDo
     }
 
     @Override
-    public void avancar() {
+    public void avancar() throws PersonagemNaoEncontradoNoMapaException {
         int posicaoInicial = this.getMapa().buscarPosicao(this);
         Personagem p1 = this.getMapa().buscarCasa(this.getMapa().buscarPosicao(this) + 1);
         if(p1 == null){

@@ -1,5 +1,6 @@
 package personagens;
 
+import exceptions.PersonagemNaoEncontradoNoMapaException;
 import interfaces.SociedadeDoAnel;
 import interfaces.classes.Mago;
 import interfaces.racas.Maia;
@@ -41,7 +42,7 @@ public class Saruman extends Personagem implements Mago, Maia, SociedadeDoAnel {
     }
 
     @Override
-    public void atacar() {
+    public void atacar() throws PersonagemNaoEncontradoNoMapaException {
         int posicaoInicial = this.getMapa().buscarPosicao(this);
         Personagem p;
         for(int i = 0; i < this.getMapa().getPersonagens().length; i++){
@@ -53,7 +54,7 @@ public class Saruman extends Personagem implements Mago, Maia, SociedadeDoAnel {
     }
 
     @Override
-    public void avancar() {
+    public void avancar() throws PersonagemNaoEncontradoNoMapaException {
         int posicaoInicial = this.getMapa().buscarPosicao(this);
         Personagem p;
         for(int i = 0; i < this.getMapa().getPersonagens().length; i++){
