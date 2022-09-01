@@ -10,7 +10,7 @@ import personagens.*;
 
 public class Testes {
     @Test
-    public void deveVencerSociedadeQuandoAragornELegolasBatalharemContraOrcEGoblim() throws PosicaoOcupadaException, PersonagemNaoEncontradoNoMapaException, PersonagemJaEstaNoMapaException {
+    public void deveVencerSociedadeQuandoAragornELegolasBatalharemContraOrcEGoblim() throws PosicaoOcupadaException, PersonagemNaoEncontradoNoMapaException, PersonagemJaEstaNoMapaException, SauronDominaOMundoException {
         // Início:  "|A|L| | | | | |O| |M|"
         String resultadoEsperado = "| | | | |A| | | | |L|";
         Mapa mapa = new Mapa();
@@ -74,5 +74,38 @@ public class Testes {
         Assert.assertEquals(resultadoEsperado, mapa.exibir());
     }
 
+    @Test(expectedExceptions = SauronDominaOMundoException.class)
+    public void deveLancarSauronDominaOMundoExceptionQuandoLegolasBatalharSozinhoContraOrcEUrukhai()
+            throws PersonagemJaEstaNoMapaException, PosicaoOcupadaException, SauronDominaOMundoException, PersonagemNaoEncontradoNoMapaException {
+        // Início:  "|L| | | | | | | |U|O|"
+        // Fim:     "| | | | | |U| | | | |";
+        Mapa mapa = new Mapa();
+        Legolas legolas = new Legolas(mapa);
+        Orc orc = new Orc(mapa);
+        Urukhai urukhai = new Urukhai(mapa);
+
+        Simulador simulador = new Simulador(mapa);
+
+        mapa.inserir(0, legolas);
+        mapa.inserir(8, urukhai);
+        mapa.inserir(9, orc);
+        simulador.simular2();
+    }
+
+    @Test(expectedExceptions = SauronDominaOMundoException.class)
+    public void deveLancarSauronDominaOMundoExceptionQuandoBoromirBatalharSozinhoContraUrukhai()
+            throws PersonagemJaEstaNoMapaException, PosicaoOcupadaException, SauronDominaOMundoException, PersonagemNaoEncontradoNoMapaException {
+        // Início:  "|B| | | | | | | | |U|"
+        // Fim:     "| | | | |U| | | | | |";
+        Mapa mapa = new Mapa();
+        Boromir boromir = new Boromir(mapa);
+        Urukhai urukhai = new Urukhai(mapa);
+
+        Simulador simulador = new Simulador(mapa);
+
+        mapa.inserir(0, boromir);
+        mapa.inserir(9, urukhai);
+        simulador.simular2();
+    }
 
 }
