@@ -13,7 +13,9 @@ public class Testes {
     public void deveVencerSociedadeQuandoAragornELegolasBatalharemContraOrcEGoblim() throws PosicaoOcupadaException, PersonagemNaoEncontradoNoMapaException, PersonagemJaEstaNoMapaException, SauronDominaOMundoException {
         // Início:  "|A|L| | | | | |O| |M|"
         String resultadoEsperado = "| | | | |A| | | | |L|";
+
         Mapa mapa = new Mapa();
+
         Aragorn aragorn = new Aragorn(mapa);
         Legolas legolas = new Legolas(mapa);
         Orc orc = new Orc(mapa);
@@ -25,7 +27,8 @@ public class Testes {
         mapa.inserir(1, legolas);
         mapa.inserir(7, orc);
         mapa.inserir(9, goblim);
-        simulador.simular2();
+
+        simulador.simular();
         System.out.println(mapa.exibir());
 
         Assert.assertEquals(resultadoEsperado, mapa.exibir());
@@ -52,7 +55,8 @@ public class Testes {
         mapa.inserir(8, orc);
         mapa.inserir(9, goblim);
 
-        simulador.simular2();
+        simulador.simular();
+
     }
 
     @Test
@@ -69,7 +73,7 @@ public class Testes {
 
         mapa.inserir(0, gandalf);
         mapa.inserir(9, saruman);
-        simulador.simular2();
+        simulador.simular();
 
         Assert.assertEquals(resultadoEsperado, mapa.exibir());
     }
@@ -89,7 +93,7 @@ public class Testes {
         mapa.inserir(0, legolas);
         mapa.inserir(8, urukhai);
         mapa.inserir(9, orc);
-        simulador.simular2();
+        simulador.simular();
     }
 
     @Test(expectedExceptions = SauronDominaOMundoException.class)
@@ -105,7 +109,38 @@ public class Testes {
 
         mapa.inserir(0, boromir);
         mapa.inserir(9, urukhai);
-        simulador.simular2();
+        simulador.simular();
+    }
+
+    @Test(expectedExceptions = PosicaoOcupadaException.class)
+    public void deveLancarPosicaoOcupadaException()
+            throws PersonagemJaEstaNoMapaException, PosicaoOcupadaException, SauronDominaOMundoException, PersonagemNaoEncontradoNoMapaException {
+        Mapa mapa = new Mapa();
+        Boromir boromir = new Boromir(mapa);
+        Urukhai urukhai = new Urukhai(mapa);
+
+        mapa.inserir(0, boromir);
+        mapa.inserir(0, urukhai);
+    }
+
+    @Test(expectedExceptions = PersonagemJaEstaNoMapaException.class)
+    public void deveLancarPersonagemJaEstaNoMapException()
+            throws PersonagemJaEstaNoMapaException, PosicaoOcupadaException, SauronDominaOMundoException, PersonagemNaoEncontradoNoMapaException {
+
+        Mapa mapa = new Mapa();
+        Urukhai urukhai = new Urukhai(mapa);
+        mapa.inserir(0, urukhai);
+        mapa.inserir(2, urukhai);
+    }
+
+    @Test(expectedExceptions = PersonagemNaoEncontradoNoMapaException.class)
+    public void deveLancarPersonagemNaoEncontradoExeption()
+            throws PersonagemJaEstaNoMapaException, PosicaoOcupadaException, SauronDominaOMundoException, PersonagemNaoEncontradoNoMapaException {
+
+        Mapa mapa = new Mapa();
+        Boromir boromir = new Boromir(mapa);
+        mapa.buscarPosicao(boromir);
+
     }
 
 }

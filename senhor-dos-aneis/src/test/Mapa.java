@@ -6,50 +6,28 @@ import exceptions.PosicaoOcupadaException;
 import personagens.personagem_base.Personagem;
 
 public class Mapa {
-    private Personagem[] personagens = new Personagem[10];
+    private final Personagem[] personagens = new Personagem[10];
 
-    public void inserir(int posicao, Personagem personagem)  throws PosicaoOcupadaException, PersonagemJaEstaNoMapaException {
-        //verifica se a posicao esta vazia
-        try{
-            if(personagens[posicao] != null)
-                throw new PosicaoOcupadaException();
-            personagens[posicao] = personagem;
-            return;
+    public void inserir(int posicao, Personagem personagem) throws PosicaoOcupadaException, PersonagemJaEstaNoMapaException {
+        if(personagens[posicao] != null){
+            throw new PosicaoOcupadaException();
         }
-        catch (PosicaoOcupadaException e){
-            e.printStackTrace();
-        }
-
-        //verifica se se personagem ja existe no mapa
-        try{
-            for(Personagem p: this.personagens){
-                if(p.toString().equals(personagem.toString()))
-                    System.out.println(p+": = "+personagem);
-                    throw new PersonagemJaEstaNoMapaException();
+        for(Personagem p: this.personagens) {
+            if (p != null && p.toString().equals(personagem.toString())){
+                throw new PersonagemJaEstaNoMapaException();
             }
         }
-        catch (PersonagemJaEstaNoMapaException e){
-            e.printStackTrace();
-        }
-
+        personagens[posicao] = personagem;
     }
-
     public int buscarPosicao(Personagem personagem) throws PersonagemNaoEncontradoNoMapaException{
-        try{
-            for (int i = 0; i < personagens.length; i++) {
-                if (personagens[i] != null) {
-                    if (personagens[i].equals(personagem))
-                        return i;
-                }
+        for (int i = 0; i < personagens.length; i++) {
+            if (personagens[i] != null) {
+                if(personagens[i].equals(personagem))
+                    return i;
             }
-            throw new PersonagemNaoEncontradoNoMapaException();
         }
-        catch (PersonagemNaoEncontradoNoMapaException e){
-            e.printStackTrace();
-            return -1;
-        }
+        throw new PersonagemNaoEncontradoNoMapaException();
     }
-
     public Personagem buscarCasa(int posicao){
         return personagens[posicao];
     }
@@ -67,7 +45,6 @@ public class Mapa {
                 continue;
             }
             sb.append(personagens[i]+"|");
-
         }
        String mapaFormatado = sb.toString();
         return mapaFormatado;
